@@ -139,9 +139,7 @@
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-      <!-- Show a default cube when kubik rubik is detected -->
-      <!-- <a-box position="0 0.5 0" color="#4CC3D9" depth="1" height="1" width="1"></a-box> -->
-      
+      <!-- Show a default cube when kubik rubik is detected -->      
       <a-box position="0 0 0" 
                scale="10 10 10"
                material="src: #grid; color: yellow; transparent: true; opacity: 0.50;">
@@ -158,16 +156,14 @@
       smoothThreshold="5"
     >
       <!-- Sphere with radius 10, initially hidden -->
-      <a-sphere id="pingvin-sphere" 
-                position="0 0 0" 
-                radius="10"
-                color="#00FF00"
-                visible="false">
-      </a-sphere>
+       <a-box id="pingvin-sphere"
+              position="0 0 0" 
+              scale="10 10 10"
+              material="src: #grid; color: red; transparent: true; opacity: 0.50;"
+              visible="false">
+        </a-box>
     </a-nft>
     
-    <!-- <a-entity position="1 0 0" scale="3 3 3" text="value: HELLO;color:yellow"></a-entity> -->
-
     <!-- static camera that moves according to the device movemenents -->
     <a-entity camera></a-entity>
   
