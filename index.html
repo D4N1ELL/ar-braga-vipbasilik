@@ -133,7 +133,7 @@
     
     const cofyMarker = document.querySelector('a-nft[url="/images/cofy"]');
     const sigmoidMarker = document.querySelector('a-nft[url="/images/sigmoid"]');
-    const sigmoidSphere = document.querySelector('#sigmoid-sphere');
+    const sigmoidBox = document.querySelector('#sigmoid-box');
     
     if (!cofyMarker) {
       addDebugMessage('ERROR: Cofy marker not found!', 'error');
@@ -141,8 +141,10 @@
     if (!sigmoidMarker) {
       addDebugMessage('ERROR: Sigmoid marker not found!', 'error');
     }
-    if (!sigmoidSphere) {
-      addDebugMessage('ERROR: Sigmoid sphere not found!', 'error');
+    if (!sigmoidBox) {
+      addDebugMessage('ERROR: Sigmoid box not found!', 'error');
+    } else {
+      addDebugMessage('Sigmoid box found in DOM', 'success');
     }
     
     // Cofy marker events
@@ -161,23 +163,24 @@
     }
     
     // Sigmoid marker events
-    if (sigmoidMarker && sigmoidSphere) {
+    if (sigmoidMarker && sigmoidBox) {
       sigmoidMarker.addEventListener('markerFound', function() {
         console.log('Sigmoid marker detected!');
         addDebugMessage('Sigmoid detected!', 'warning');
         if (sigmoidUnlocked) {
-          console.log('Sigmoid sphere shown (cofy was scanned first)');
-          sigmoidSphere.setAttribute('visible', 'true');
-          addDebugMessage('✓ Sigmoid sphere shown!', 'success');
+          console.log('Sigmoid box shown (cofy was scanned first)');
+          sigmoidBox.setAttribute('visible', 'true');
+          addDebugMessage('✓ Sigmoid box shown!', 'success');
         } else {
           console.log('Sigmoid blocked - scan cofy first!');
-          sigmoidSphere.setAttribute('visible', 'false');
+          sigmoidBox.setAttribute('visible', 'false');
           addDebugMessage('✗ Sigmoid BLOCKED! Scan COFY first!', 'error');
         }
       });
       
       sigmoidMarker.addEventListener('markerLost', function() {
         console.log('Sigmoid marker lost');
+        sigmoidBox.setAttribute('visible', 'false');
         addDebugMessage('Sigmoid marker lost', 'info');
       });
     }
