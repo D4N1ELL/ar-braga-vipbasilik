@@ -60,6 +60,39 @@
   .loading {
     color: #FFC107;
   }
+  
+  #debug-info {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    z-index: 10000;
+    max-width: 90%;
+  }
+  
+  #debug-info div {
+    margin: 8px 0;
+  }
+  
+  .debug-success {
+    color: #4CAF50;
+    font-weight: bold;
+  }
+  
+  .debug-error {
+    color: #FF5722;
+    font-weight: bold;
+  }
+  
+  .debug-warning {
+    color: #FFC107;
+  }
 </style>
 
 <script>
@@ -72,6 +105,22 @@
     }
   }
   
+  // Add debug message to screen
+  function addDebugMessage(message, type = 'info') {
+    const debugDiv = document.getElementById('debug-messages');
+    if (debugDiv) {
+      const msg = document.createElement('div');
+      msg.textContent = message;
+      msg.className = 'debug-' + type;
+      debugDiv.appendChild(msg);
+      
+      // Keep only last 5 messages
+      while (debugDiv.children.length > 5) {
+        debugDiv.removeChild(debugDiv.firstChild);
+      }
+    }
+  }
+  
   // Track if cofy was scanned first
   let cofyScanned = false;
   let sigmoidUnlocked = false;
@@ -80,37 +129,58 @@
   window.addEventListener('load', function() {
     updateStatus('A-Frame', '✓ Loaded');
     updateStatus('AR.js', '✓ Loaded');
+    addDebugMessage('App loaded. Scan COFY first!', 'warning');
     
     const cofyMarker = document.querySelector('a-nft[url="/images/cofy"]');
     const sigmoidMarker = document.querySelector('a-nft[url="/images/sigmoid"]');
     const sigmoidSphere = document.querySelector('#sigmoid-sphere');
     
-    // Cofy marker events
-    cofyMarker.addEventListener('markerFound', function() {
-      console.log('cofy marker detected!');
-      cofyScanned = true;
-      sigmoidUnlocked = true;
-    });
+    if (!cofyMarker) {
+      addDebugMessage('ERROR: Cofy marker not found!', 'error');
+    }
+    if (!sigmoidMarker) {
+      addDebugMessage('ERROR: Sigmoid marker not found!', 'error');
+    }
+    if (!sigmoidSphere) {
+      addDebugMessage('ERROR: Sigmoid sphere not found!', 'error');
+    }
     
-    cofyMarker.addEventListener('markerLost', function() {
-      console.log('Cofy marker lost');
-    });
+    // Cofy marker events
+    if (cofyMarker) {
+      cofyMarker.addEventListener('markerFound', function() {
+        console.log('cofy marker detected!');
+        cofyScanned = true;
+        sigmoidUnlocked = true;
+        addDebugMessage('✓ COFY detected! Sigmoid unlocked!', 'success');
+      });
+      
+      cofyMarker.addEventListener('markerLost', function() {
+        console.log('Cofy marker lost');
+        addDebugMessage('Cofy marker lost', 'info');
+      });
+    }
     
     // Sigmoid marker events
-    sigmoidMarker.addEventListener('markerFound', function() {
-      console.log('Sigmoid marker detected!');
-      if (sigmoidUnlocked) {
-        console.log('Sigmoid sphere shown (cofy was scanned first)');
-        sigmoidSphere.setAttribute('visible', 'true');
-      } else {
-        console.log('Sigmoid blocked - scan cofy first!');
-        sigmoidSphere.setAttribute('visible', 'false');
-      }
-    });
-    
-    sigmoidMarker.addEventListener('markerLost', function() {
-      console.log('Sigmoid marker lost');
-    });
+    if (sigmoidMarker && sigmoidSphere) {
+      sigmoidMarker.addEventListener('markerFound', function() {
+        console.log('Sigmoid marker detected!');
+        addDebugMessage('Sigmoid detected!', 'warning');
+        if (sigmoidUnlocked) {
+          console.log('Sigmoid sphere shown (cofy was scanned first)');
+          sigmoidSphere.setAttribute('visible', 'true');
+          addDebugMessage('✓ Sigmoid sphere shown!', 'success');
+        } else {
+          console.log('Sigmoid blocked - scan cofy first!');
+          sigmoidSphere.setAttribute('visible', 'false');
+          addDebugMessage('✗ Sigmoid BLOCKED! Scan COFY first!', 'error');
+        }
+      });
+      
+      sigmoidMarker.addEventListener('markerLost', function() {
+        console.log('Sigmoid marker lost');
+        addDebugMessage('Sigmoid marker lost', 'info');
+      });
+    }
   });
 </script>
 <body style="margin: 0px; overflow: hidden;">
@@ -119,6 +189,12 @@
   <div id="library-status">
     <div id="A-Frame-status" class="status-item loading">A-Frame: Loading...</div>
     <div id="AR.js-status" class="status-item loading">AR.js: Loading...</div>
+  </div>
+  
+  <!-- Debug info display at bottom of screen -->
+  <div id="debug-info">
+    <strong>DEBUG INFO:</strong>
+    <div id="debug-messages"></div>
   </div>
 
   <!-- a-frame scene -->
