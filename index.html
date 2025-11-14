@@ -1,34 +1,23 @@
-<!-- import aframe and then ar.js with image tracking / location based features -->
-<script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-
-<!-- style for the loader -->
-<style>
-  .arjs-loader {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .arjs-loader div {
-    text-align: center;
-    font-size: 1.25em;
-    color: white;
-  }
-</style>
-
-<body style="margin : 0px; overflow: hidden;">
-  <!-- minimal loader shown until image descriptors are loaded. Loading may take a while according to the device computational power -->
-  <div class="arjs-loader">
-    <div>Loading, please wait...</div>
-  </div>
+<!doctype HTML>
+<html>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<script src="js/aframe.min.js"></script>
+<script src="js/aframe-ar.js"></script>
+<script>
+  // Debug console logging for NFT detection
+  window.addEventListener('load', function() {
+    const nftMarker = document.querySelector('a-nft');
+    
+    nftMarker.addEventListener('markerFound', function() {
+      console.log('NFT marker detected!');
+    });
+    
+    nftMarker.addEventListener('markerLost', function() {
+      console.log('NFT marker lost');
+    });
+  });
+</script>
+<body style="margin: 0px; overflow: hidden;">
 
   <!-- a-frame scene -->
   <a-scene
@@ -42,26 +31,22 @@
     <!-- the path should end with the name without the extension e.g. if file is 'pinball.fset' the path should end with 'pinball' -->
     <a-nft
       type="nft"
-      url="stefan2"
+      url="/images/kubik2"
       smooth="true"
       smoothCount="10"
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-      <!-- as a child of the a-nft entity, you can define the content to show. here's a GLTF model entity -->
-      <a-entity
-        gltf-model="BoxInstanced.gltf"
-        scale="45 45 45"
-        position="50 150 0"
-        
-               
-      >
-      </a-entity>
-       
-    </a-nft> 
+      <!-- Show a default cube when label-pi is detected -->
+      <a-box position="0 0.5 0" color="#4CC3D9" depth="1" height="1" width="1"></a-box>
+    </a-nft>
     <a-entity position="1 0 0" scale="3 3 3" text="value: HELLO;color:yellow"></a-entity>
 
     <!-- static camera that moves according to the device movemenents -->
     <a-entity camera></a-entity>
+  
   </a-scene>
+
+
 </body>
+</html>
