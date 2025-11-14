@@ -72,44 +72,44 @@
     }
   }
   
-  // Track if kubik was scanned first
-  let kubikScanned = false;
-  let pingvinUnlocked = false;
+  // Track if cofy was scanned first
+  let cofyScanned = false;
+  let sigmoidUnlocked = false;
   
   // Debug console logging for NFT detection
   window.addEventListener('load', function() {
     updateStatus('A-Frame', '✓ Loaded');
     updateStatus('AR.js', '✓ Loaded');
     
-    const kubikMarker = document.querySelector('a-nft[url="/images/kubik2"]');
-    const pingvinMarker = document.querySelector('a-nft[url="/images/pinvin"]');
-    const pingvinSphere = document.querySelector('#pingvin-sphere');
+    const cofyMarker = document.querySelector('a-nft[url="/images/cofy"]');
+    const sigmoidMarker = document.querySelector('a-nft[url="/images/sigmoid"]');
+    const sigmoidSphere = document.querySelector('#sigmoid-sphere');
     
-    // Kubik marker events
-    kubikMarker.addEventListener('markerFound', function() {
-      console.log('Kubik marker detected!');
-      kubikScanned = true;
-      pingvinUnlocked = true;
+    // Cofy marker events
+    cofyMarker.addEventListener('markerFound', function() {
+      console.log('cofy marker detected!');
+      cofyScanned = true;
+      sigmoidUnlocked = true;
     });
     
-    kubikMarker.addEventListener('markerLost', function() {
-      console.log('Kubik marker lost');
+    cofyMarker.addEventListener('markerLost', function() {
+      console.log('Cofy marker lost');
     });
     
-    // Pingvin marker events
-    pingvinMarker.addEventListener('markerFound', function() {
-      console.log('Pingvin marker detected!');
-      if (pingvinUnlocked) {
-        console.log('Pingvin sphere shown (kubik was scanned first)');
-        pingvinSphere.setAttribute('visible', 'true');
+    // Sigmoid marker events
+    sigmoidMarker.addEventListener('markerFound', function() {
+      console.log('Sigmoid marker detected!');
+      if (sigmoidUnlocked) {
+        console.log('Sigmoid sphere shown (cofy was scanned first)');
+        sigmoidSphere.setAttribute('visible', 'true');
       } else {
-        console.log('Pingvin blocked - scan kubik first!');
-        pingvinSphere.setAttribute('visible', 'false');
+        console.log('Sigmoid blocked - scan cofy first!');
+        sigmoidSphere.setAttribute('visible', 'false');
       }
     });
     
-    pingvinMarker.addEventListener('markerLost', function() {
-      console.log('Pingvin marker lost');
+    sigmoidMarker.addEventListener('markerLost', function() {
+      console.log('Sigmoid marker lost');
     });
   });
 </script>
@@ -133,30 +133,30 @@
     <!-- the path should end with the name without the extension e.g. if file is 'pinball.fset' the path should end with 'pinball' -->
     <a-nft
       type="nft"
-      url="/images/kubik2"
+      url="/images/cofy"
       smooth="true"
       smoothCount="10"
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-      <!-- Show a default cube when kubik rubik is detected -->      
+      <!-- Show a default cube when cofy rubik is detected -->      
       <a-box position="0 0 0" 
                scale="10 10 10"
                material="src: #grid; color: yellow; transparent: true; opacity: 0.50;">
         </a-box>
     </a-nft>
     
-    <!-- Pingvin NFT marker - shows sphere only if kubik was scanned first -->
+    <!-- Sigmoid NFT marker - shows sphere only if cofy was scanned first -->
     <a-nft
       type="nft"
-      url="/images/pinvin"
+      url="/images/sigmoid"
       smooth="true"
       smoothCount="10"
       smoothTolerance=".01"
       smoothThreshold="5"
     >
       <!-- Sphere with radius 10, initially hidden -->
-       <a-box id="pingvin-sphere"
+       <a-box id="sigmoid-box"
               position="0 0 0" 
               scale="10 10 10"
               material="src: #grid; color: red; transparent: true; opacity: 0.50;"
