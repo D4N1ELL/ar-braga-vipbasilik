@@ -72,19 +72,44 @@
     }
   }
   
+  // Track if kubik was scanned first
+  let kubikScanned = false;
+  let pingvinUnlocked = false;
+  
   // Debug console logging for NFT detection
   window.addEventListener('load', function() {
     updateStatus('A-Frame', '✓ Loaded');
     updateStatus('AR.js', '✓ Loaded');
     
-    const nftMarker = document.querySelector('a-nft');
+    const kubikMarker = document.querySelector('a-nft[url="/images/kubik2"]');
+    const pingvinMarker = document.querySelector('a-nft[url="/images/pinvin"]');
+    const pingvinSphere = document.querySelector('#pingvin-sphere');
     
-    nftMarker.addEventListener('markerFound', function() {
-      console.log('NFT marker detected!');
+    // Kubik marker events
+    kubikMarker.addEventListener('markerFound', function() {
+      console.log('Kubik marker detected!');
+      kubikScanned = true;
+      pingvinUnlocked = true;
     });
     
-    nftMarker.addEventListener('markerLost', function() {
-      console.log('NFT marker lost');
+    kubikMarker.addEventListener('markerLost', function() {
+      console.log('Kubik marker lost');
+    });
+    
+    // Pingvin marker events
+    pingvinMarker.addEventListener('markerFound', function() {
+      console.log('Pingvin marker detected!');
+      if (pingvinUnlocked) {
+        console.log('Pingvin sphere shown (kubik was scanned first)');
+        pingvinSphere.setAttribute('visible', 'true');
+      } else {
+        console.log('Pingvin blocked - scan kubik first!');
+        pingvinSphere.setAttribute('visible', 'false');
+      }
+    });
+    
+    pingvinMarker.addEventListener('markerLost', function() {
+      console.log('Pingvin marker lost');
     });
   });
 </script>
@@ -119,9 +144,28 @@
       
       <a-box position="0 0 0" 
                scale="10 10 10"
-               material="color: red; transparent: true; opacity: 0.50;">
+               material="src: #grid; color: yellow; transparent: true; opacity: 0.50;">
         </a-box>
     </a-nft>
+    
+    <!-- Pingvin NFT marker - shows sphere only if kubik was scanned first -->
+    <a-nft
+      type="nft"
+      url="/images/pinvin"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance=".01"
+      smoothThreshold="5"
+    >
+      <!-- Sphere with radius 10, initially hidden -->
+      <a-sphere id="pingvin-sphere" 
+                position="0 0 0" 
+                radius="10"
+                color="#00FF00"
+                visible="false">
+      </a-sphere>
+    </a-nft>
+    
     <!-- <a-entity position="1 0 0" scale="3 3 3" text="value: HELLO;color:yellow"></a-entity> -->
 
     <!-- static camera that moves according to the device movemenents -->
