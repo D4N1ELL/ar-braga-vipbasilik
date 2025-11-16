@@ -132,6 +132,24 @@
     updateStatus('AR.js', '✓ Loaded');
     addDebugMessage('Quest started! Scan SPECIALTY logo first!', 'warning');
     
+    // Check if models are loaded
+    const laptopModel = document.querySelector('#laptop-model');
+    const coffeeModel = document.querySelector('#coffee-model');
+    const jokeModel = document.querySelector('#joke-model');
+    const graduationModel = document.querySelector('#graduation-model');
+    
+    if (laptopModel) addDebugMessage('Laptop model loaded', 'success');
+    else addDebugMessage('ERROR: Laptop model not loaded!', 'error');
+    
+    if (coffeeModel) addDebugMessage('Coffee model loaded', 'success');
+    else addDebugMessage('ERROR: Coffee model not loaded!', 'error');
+    
+    if (jokeModel) addDebugMessage('Joke model loaded', 'success');
+    else addDebugMessage('ERROR: Joke model not loaded!', 'error');
+    
+    if (graduationModel) addDebugMessage('Graduation model loaded', 'success');
+    else addDebugMessage('ERROR: Graduation model not loaded!', 'error');
+    
     const specialtyMarker = document.querySelector('a-nft[url="/images/specialty"]');
     const cofyMarker = document.querySelector('a-nft[url="/images/cofy"]');
     const jokeMarker = document.querySelector('a-nft[url="/images/joke"]');
@@ -277,12 +295,12 @@
       <!-- 3D Model -->
       <a-entity gltf-model="#laptop-model" 
                 position="0 5 0" 
-                scale="50 50 50"
+                scale="100 100 100"
                 rotation="0 0 0">
       </a-entity>
       
       <!-- Hint panel floating above -->
-      <a-plane position="0 15 0" 
+      <!-- <a-plane position="0 15 0" 
                rotation="-90 0 0"
                width="30" 
                height="15"
@@ -294,7 +312,7 @@
                 color="#00FF00"
                 position="0 0 0.1">
         </a-text>
-      </a-plane>
+      </a-plane> -->
     </a-nft>
     
     <!-- Sticker 2: Coffee Cup - Unlocked after Specialty -->
@@ -310,13 +328,13 @@
       <a-entity id="cofy-box"
                 gltf-model="#coffee-model"
                 position="0 5 0" 
-                scale="50 50 50"
+                scale="100 100 100"
                 rotation="0 0 0"
                 visible="false">
       </a-entity>
       
       <!-- Hint panel -->
-      <a-plane position="0 15 0" 
+      <!-- <a-plane position="0 15 0" 
                rotation="-90 0 0"
                width="30" 
                height="15"
@@ -328,7 +346,7 @@
                 color="#FFFF00"
                 position="0 0 0.1">
         </a-text>
-      </a-plane>
+      </a-plane> -->
     </a-nft>
     
     <!-- Sticker 3: Coding Joke - Unlocked after Coffee -->
@@ -344,13 +362,13 @@
       <a-entity id="joke-box"
                 gltf-model="#joke-model"
                 position="0 5 0" 
-                scale="50 50 50"
+                scale="100 100 100"
                 rotation="0 0 0"
                 visible="false">
       </a-entity>
       
       <!-- Hint panel -->
-      <a-plane position="0 15 0" 
+      <!-- <a-plane position="0 15 0" 
                rotation="-90 0 0"
                width="30" 
                height="15"
@@ -362,7 +380,7 @@
                 color="#FF00FF"
                 position="0 0 0.1">
         </a-text>
-      </a-plane>
+      </a-plane> -->
     </a-nft>
     
     <!-- Sticker 4: Sigmoid Curve - Final stage, unlocked after Joke -->
@@ -378,13 +396,13 @@
       <a-entity id="sigmoid-box"
                 gltf-model="#graduation-model"
                 position="0 5 0" 
-                scale="50 50 50"
+                scale="100 100 100"
                 rotation="0 0 0"
                 visible="false">
       </a-entity>
       
       <!-- Final message panel -->
-      <a-plane position="0 15 0" 
+      <!-- <a-plane position="0 15 0" 
                rotation="-90 0 0"
                width="30" 
                height="15"
@@ -396,7 +414,7 @@
                 color="#FF0000"
                 position="0 0 0.1">
         </a-text>
-      </a-plane>
+      </a-plane> -->
     </a-nft>
     
     <!-- static camera that moves according to the device movemenents -->
