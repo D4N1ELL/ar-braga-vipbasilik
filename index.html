@@ -309,11 +309,11 @@
       smoothThreshold="5"
     >
       <!-- 3D Model -->
-      <a-gltf-model src="#laptop-model" 
-                    position="0 0 0" 
-                    scale="0.0017 0.05 0.0025"
-                    rotation="0 0 0">
-      </a-gltf-model>
+      <a-entity gltf-model="#laptop-model" 
+                position="0 0 0" 
+                scale="0.0017 0.05 0.0025"
+                rotation="0 0 0">
+      </a-entity>
       
       <!-- Fallback visible box to test positioning -->
       <a-box position="0 10 0" 
@@ -348,13 +348,13 @@
       smoothThreshold="5"
     >
       <!-- 3D Coffee Model - initially hidden -->
-      <a-gltf-model id="cofy-box"
-                    src="#coffee-model"
-                    position="0 0 0" 
-                    scale="0.147 0.094 0.147"
-                    rotation="0 0 0"
-                    visible="false">
-      </a-gltf-model>
+      <a-entity id="cofy-box"
+                gltf-model="#coffee-model"
+                position="0 0 0" 
+                scale="0.147 0.094 0.147"
+                rotation="0 0 0"
+                visible="false">
+      </a-entity>
       
       <!-- Fallback visible box to test positioning -->
       <a-box id="cofy-fallback"
@@ -391,13 +391,13 @@
       smoothThreshold="5"
     >
       <!-- 3D Joke Model - initially hidden -->
-      <a-gltf-model id="joke-box"
-                    src="#joke-model"
-                    position="0 0 0" 
-                    scale="0.0025 0.0025 0.0025"
-                    rotation="0 0 0"
-                    visible="false">
-      </a-gltf-model>
+      <a-entity id="joke-box"
+                gltf-model="#joke-model"
+                position="0 0 0" 
+                scale="0.0025 0.0025 0.0025"
+                rotation="0 0 0"
+                visible="false">
+      </a-entity>
       
       <!-- Fallback visible box to test positioning -->
       <a-box id="joke-fallback"
@@ -434,13 +434,13 @@
       smoothThreshold="5"
     >
       <!-- 3D Sigmoid Model - initially hidden -->
-      <a-gltf-model id="sigmoid-box"
-                    src="#graduation-model"
-                    position="0 0 0" 
-                    scale="0.009 0.009 0.027"
-                    rotation="0 0 0"
-                    visible="false">
-      </a-gltf-model>
+      <a-entity id="sigmoid-box"
+                gltf-model="#graduation-model"
+                position="0 0 0" 
+                scale="0.009 0.009 0.027"
+                rotation="0 0 0"
+                visible="false">
+      </a-entity>
       
       <!-- Fallback visible box to test positioning -->
       <a-box id="sigmoid-fallback"
