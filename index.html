@@ -159,6 +159,10 @@
     const jokeBox = document.querySelector('#joke-box');
     const sigmoidBox = document.querySelector('#sigmoid-box');
     
+    const cofyFallback = document.querySelector('#cofy-fallback');
+    const jokeFallback = document.querySelector('#joke-fallback');
+    const sigmoidFallback = document.querySelector('#sigmoid-fallback');
+    
     // Verify all markers exist
     if (!specialtyMarker) addDebugMessage('ERROR: Specialty marker not found!', 'error');
     if (!cofyMarker) addDebugMessage('ERROR: Cofy marker not found!', 'error');
@@ -191,10 +195,12 @@
           cofyScanned = true;
           jokeUnlocked = true;
           cofyBox.setAttribute('visible', 'true');
+          if (cofyFallback) cofyFallback.setAttribute('visible', 'true');
           addDebugMessage('✓ COFFEE unlocked! Energy gained!', 'success');
           addDebugMessage('Next: Find the CODING JOKE!', 'warning');
         } else {
           cofyBox.setAttribute('visible', 'false');
+          if (cofyFallback) cofyFallback.setAttribute('visible', 'false');
           addDebugMessage('✗ BLOCKED! Scan SPECIALTY first!', 'error');
         }
       });
@@ -215,10 +221,12 @@
           jokeScanned = true;
           sigmoidUnlocked = true;
           jokeBox.setAttribute('visible', 'true');
+          if (jokeFallback) jokeFallback.setAttribute('visible', 'true');
           addDebugMessage('✓ JOKE unlocked! Humor restored!', 'success');
           addDebugMessage('Final step: Find the SIGMOID!', 'warning');
         } else {
           jokeBox.setAttribute('visible', 'false');
+          if (jokeFallback) jokeFallback.setAttribute('visible', 'false');
           addDebugMessage('✗ BLOCKED! Scan COFFEE first!', 'error');
         }
       });
@@ -226,6 +234,7 @@
       jokeMarker.addEventListener('markerLost', function() {
         console.log('Joke marker lost');
         jokeBox.setAttribute('visible', 'false');
+        if (jokeFallback) jokeFallback.setAttribute('visible', 'false');
         addDebugMessage('Joke marker lost', 'info');
       });
     }
@@ -238,10 +247,12 @@
         
         if (sigmoidUnlocked) {
           sigmoidBox.setAttribute('visible', 'true');
+          if (sigmoidFallback) sigmoidFallback.setAttribute('visible', 'true');
           addDebugMessage('✓ SIGMOID COMPLETE!', 'success');
           addDebugMessage('🎉 Quest completed! You are the Architect!', 'success');
         } else {
           sigmoidBox.setAttribute('visible', 'false');
+          if (sigmoidFallback) sigmoidFallback.setAttribute('visible', 'false');
           addDebugMessage('✗ BLOCKED! Scan JOKE first!', 'error');
         }
       });
@@ -249,6 +260,7 @@
       sigmoidMarker.addEventListener('markerLost', function() {
         console.log('Sigmoid marker lost');
         sigmoidBox.setAttribute('visible', 'false');
+        if (sigmoidFallback) sigmoidFallback.setAttribute('visible', 'false');
         addDebugMessage('Sigmoid marker lost', 'info');
       });
     }
@@ -348,7 +360,8 @@
       </a-entity>
       
       <!-- Fallback visible box to test positioning -->
-      <a-box position="0 10 0" 
+      <a-box id="cofy-fallback"
+             position="0 10 0" 
              scale="10 10 10"
              color="#FFFF00"
              material="opacity: 0.5; transparent: true;"
@@ -391,7 +404,8 @@
       </a-entity>
       
       <!-- Fallback visible box to test positioning -->
-      <a-box position="0 10 0" 
+      <a-box id="joke-fallback"
+             position="0 10 0" 
              scale="10 10 10"
              color="#FF00FF"
              material="opacity: 0.5; transparent: true;"
@@ -434,7 +448,8 @@
       </a-entity>
       
       <!-- Fallback visible box to test positioning -->
-      <a-box position="0 10 0" 
+      <a-box id="sigmoid-fallback"
+             position="0 10 0" 
              scale="10 10 10"
              color="#FF0000"
              material="opacity: 0.5; transparent: true;"
