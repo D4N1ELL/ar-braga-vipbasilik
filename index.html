@@ -296,7 +296,7 @@
   >
     <!-- Asset Management System -->
     <a-assets>
-      <a-asset-item id="laptop-model" src="assets/Laptop.fbx"></a-asset-item>
+      <a-asset-item id="laptop-model" src="assets/laptop.glb"></a-asset-item>
       <a-asset-item id="coffee-model" src="assets/coffe_cup.glb"></a-asset-item>
       <a-asset-item id="joke-model" src="assets/emoji_laugh.glb"></a-asset-item>
       <a-asset-item id="graduation-model" src="assets/graduation_cap.glb"></a-asset-item>
@@ -316,9 +316,8 @@
       smoothThreshold="5"
     >
       <!-- 3D Model -->
-      <a-entity 
-                fbx-model=”src: url(/assets/Laptop.fbx);”
-                position="0 0 0" 
+      <a-entity gltf-model-next= ”src: url(/assets/laptop.glb);”
+                position="0 0  0" 
                 scale="5 5 5"
                 rotation="0 0 0">
       </a-entity>
