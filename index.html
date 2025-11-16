@@ -271,9 +271,9 @@
   <!-- a-frame scene -->
   <a-scene
     vr-mode-ui="enabled: false;"
-    renderer="logarithmicDepthBuffer: true;"
+    renderer="logarithmicDepthBuffer: true; antialias: true;"
     embedded
-    arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
   >
     <!-- Asset Management System -->
     <a-assets>
@@ -282,6 +282,10 @@
       <a-asset-item id="joke-model" src="assets/emoji_laugh.glb"></a-asset-item>
       <a-asset-item id="graduation-model" src="assets/graduation_cap.glb"></a-asset-item>
     </a-assets>
+    
+    <!-- Add lights for better visibility -->
+    <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
+    <a-light type="directional" position="0 1 0" intensity="1"></a-light>
     
     <!-- Sticker 1: Specialty Logo - Always available, starts the quest -->
     <a-nft
@@ -294,10 +298,19 @@
     >
       <!-- 3D Model -->
       <a-entity gltf-model="#laptop-model" 
-                position="0 5 0" 
+                position="0 0 0" 
                 scale="100 100 100"
-                rotation="0 0 0">
+                rotation="0 0 0"
+                material="shader: standard"
+                visible="true">
       </a-entity>
+      
+      <!-- Fallback visible box to test positioning -->
+      <a-box position="0 10 0" 
+             scale="10 10 10"
+             color="#00FF00"
+             material="opacity: 0.5; transparent: true;">
+      </a-box>
       
       <!-- Hint panel floating above -->
       <!-- <a-plane position="0 15 0" 
@@ -327,11 +340,20 @@
       <!-- 3D Coffee Model - initially hidden -->
       <a-entity id="cofy-box"
                 gltf-model="#coffee-model"
-                position="0 5 0" 
+                position="0 0 0" 
                 scale="100 100 100"
                 rotation="0 0 0"
+                material="shader: standard"
                 visible="false">
       </a-entity>
+      
+      <!-- Fallback visible box to test positioning -->
+      <a-box position="0 10 0" 
+             scale="10 10 10"
+             color="#FFFF00"
+             material="opacity: 0.5; transparent: true;"
+             visible="false">
+      </a-box>
       
       <!-- Hint panel -->
       <!-- <a-plane position="0 15 0" 
@@ -361,11 +383,20 @@
       <!-- 3D Joke Model - initially hidden -->
       <a-entity id="joke-box"
                 gltf-model="#joke-model"
-                position="0 5 0" 
+                position="0 0 0" 
                 scale="100 100 100"
                 rotation="0 0 0"
+                material="shader: standard"
                 visible="false">
       </a-entity>
+      
+      <!-- Fallback visible box to test positioning -->
+      <a-box position="0 10 0" 
+             scale="10 10 10"
+             color="#FF00FF"
+             material="opacity: 0.5; transparent: true;"
+             visible="false">
+      </a-box>
       
       <!-- Hint panel -->
       <!-- <a-plane position="0 15 0" 
@@ -395,11 +426,20 @@
       <!-- 3D Sigmoid Model - initially hidden -->
       <a-entity id="sigmoid-box"
                 gltf-model="#graduation-model"
-                position="0 5 0" 
+                position="0 0 0" 
                 scale="100 100 100"
                 rotation="0 0 0"
+                material="shader: standard"
                 visible="false">
       </a-entity>
+      
+      <!-- Fallback visible box to test positioning -->
+      <a-box position="0 10 0" 
+             scale="10 10 10"
+             color="#FF0000"
+             material="opacity: 0.5; transparent: true;"
+             visible="false">
+      </a-box>
       
       <!-- Final message panel -->
       <!-- <a-plane position="0 15 0" 
