@@ -61,21 +61,20 @@
   
   #debug-info {
     position: fixed;
-    bottom: 10px;
-    left: 10px;
+    top: 10px;
     right: 10px;
     background-color: rgba(0, 0, 0, 0.9);
     color: white;
-    padding: 15px;
+    padding: 10px;
     border-radius: 5px;
     font-family: Arial, sans-serif;
-    font-size: 16px;
+    font-size: 11px;
     z-index: 10000;
-    max-width: 90%;
+    max-width: 250px;
   }
   
   #debug-info div {
-    margin: 8px 0;
+    margin: 4px 0;
   }
   
   .debug-success {
@@ -119,60 +118,113 @@
     }
   }
   
-  // Track if cofy was scanned first
+  // Track progression through all 4 stickers
+  let specialtyScanned = false;
+  let cofyUnlocked = false;
   let cofyScanned = false;
+  let jokeUnlocked = false;
+  let jokeScanned = false;
   let sigmoidUnlocked = false;
   
   // Debug console logging for NFT detection
   window.addEventListener('load', function() {
     updateStatus('A-Frame', '✓ Loaded');
     updateStatus('AR.js', '✓ Loaded');
-    addDebugMessage('App loaded. Scan COFY first!', 'warning');
+    addDebugMessage('Quest started! Scan SPECIALTY logo first!', 'warning');
     
+    const specialtyMarker = document.querySelector('a-nft[url="/images/specialty"]');
     const cofyMarker = document.querySelector('a-nft[url="/images/cofy"]');
+    const jokeMarker = document.querySelector('a-nft[url="/images/joke"]');
     const sigmoidMarker = document.querySelector('a-nft[url="/images/sigmoid"]');
+    
+    const cofyBox = document.querySelector('#cofy-box');
+    const jokeBox = document.querySelector('#joke-box');
     const sigmoidBox = document.querySelector('#sigmoid-box');
     
-    if (!cofyMarker) {
-      addDebugMessage('ERROR: Cofy marker not found!', 'error');
-    }
-    if (!sigmoidMarker) {
-      addDebugMessage('ERROR: Sigmoid marker not found!', 'error');
-    }
-    if (!sigmoidBox) {
-      addDebugMessage('ERROR: Sigmoid box not found!', 'error');
-    } else {
-      addDebugMessage('Sigmoid box found in DOM', 'success');
+    // Verify all markers exist
+    if (!specialtyMarker) addDebugMessage('ERROR: Specialty marker not found!', 'error');
+    if (!cofyMarker) addDebugMessage('ERROR: Cofy marker not found!', 'error');
+    if (!jokeMarker) addDebugMessage('ERROR: Joke marker not found!', 'error');
+    if (!sigmoidMarker) addDebugMessage('ERROR: Sigmoid marker not found!', 'error');
+    
+    // Sticker 1: Specialty Logo - Always available
+    if (specialtyMarker) {
+      specialtyMarker.addEventListener('markerFound', function() {
+        console.log('Specialty marker detected!');
+        specialtyScanned = true;
+        cofyUnlocked = true;
+        addDebugMessage('✓ SPECIALTY detected! Quest begins!', 'success');
+        addDebugMessage('Next: Find the COFFEE cup!', 'warning');
+      });
+      
+      specialtyMarker.addEventListener('markerLost', function() {
+        console.log('Specialty marker lost');
+        addDebugMessage('Specialty marker lost', 'info');
+      });
     }
     
-    // Cofy marker events
-    if (cofyMarker) {
+    // Sticker 2: Cofy (Coffee Cup) - Unlocked after Specialty
+    if (cofyMarker && cofyBox) {
       cofyMarker.addEventListener('markerFound', function() {
-        console.log('cofy marker detected!');
-        cofyScanned = true;
-        sigmoidUnlocked = true;
-        addDebugMessage('✓ COFY detected! Sigmoid unlocked!', 'success');
+        console.log('Cofy marker detected!');
+        addDebugMessage('Coffee cup detected!', 'warning');
+        
+        if (cofyUnlocked) {
+          cofyScanned = true;
+          jokeUnlocked = true;
+          cofyBox.setAttribute('visible', 'true');
+          addDebugMessage('✓ COFFEE unlocked! Energy gained!', 'success');
+          addDebugMessage('Next: Find the CODING JOKE!', 'warning');
+        } else {
+          cofyBox.setAttribute('visible', 'false');
+          addDebugMessage('✗ BLOCKED! Scan SPECIALTY first!', 'error');
+        }
       });
       
       cofyMarker.addEventListener('markerLost', function() {
         console.log('Cofy marker lost');
-        addDebugMessage('Cofy marker lost', 'info');
+        addDebugMessage('Coffee marker lost', 'info');
       });
     }
     
-    // Sigmoid marker events
+    // Sticker 3: Joke - Unlocked after Cofy
+    if (jokeMarker && jokeBox) {
+      jokeMarker.addEventListener('markerFound', function() {
+        console.log('Joke marker detected!');
+        addDebugMessage('Joke detected!', 'warning');
+        
+        if (jokeUnlocked) {
+          jokeScanned = true;
+          sigmoidUnlocked = true;
+          jokeBox.setAttribute('visible', 'true');
+          addDebugMessage('✓ JOKE unlocked! Humor restored!', 'success');
+          addDebugMessage('Final step: Find the SIGMOID!', 'warning');
+        } else {
+          jokeBox.setAttribute('visible', 'false');
+          addDebugMessage('✗ BLOCKED! Scan COFFEE first!', 'error');
+        }
+      });
+      
+      jokeMarker.addEventListener('markerLost', function() {
+        console.log('Joke marker lost');
+        jokeBox.setAttribute('visible', 'false');
+        addDebugMessage('Joke marker lost', 'info');
+      });
+    }
+    
+    // Sticker 4: Sigmoid - Final stage, unlocked after Joke
     if (sigmoidMarker && sigmoidBox) {
       sigmoidMarker.addEventListener('markerFound', function() {
         console.log('Sigmoid marker detected!');
         addDebugMessage('Sigmoid detected!', 'warning');
+        
         if (sigmoidUnlocked) {
-          console.log('Sigmoid box shown (cofy was scanned first)');
           sigmoidBox.setAttribute('visible', 'true');
-          addDebugMessage('✓ Sigmoid box shown!', 'success');
+          addDebugMessage('✓ SIGMOID COMPLETE!', 'success');
+          addDebugMessage('🎉 Quest completed! You are the Architect!', 'success');
         } else {
-          console.log('Sigmoid blocked - scan cofy first!');
           sigmoidBox.setAttribute('visible', 'false');
-          addDebugMessage('✗ Sigmoid BLOCKED! Scan COFY first!', 'error');
+          addDebugMessage('✗ BLOCKED! Scan JOKE first!', 'error');
         }
       });
       
@@ -205,9 +257,46 @@
     embedded
     arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
   >
-    <!-- a-nft is the anchor that defines an Image Tracking entity -->
-    <!-- on 'url' use the path to the Image Descriptors created before. -->
-    <!-- the path should end with the name without the extension e.g. if file is 'pinball.fset' the path should end with 'pinball' -->
+    <!-- Asset Management System -->
+    <a-assets>
+      <a-asset-item id="laptop-model" src="assets/laptop.glb"></a-asset-item>
+      <a-asset-item id="coffee-model" src="assets/coffe_cup.glb"></a-asset-item>
+      <a-asset-item id="joke-model" src="assets/emoji_laugh.glb"></a-asset-item>
+      <a-asset-item id="graduation-model" src="assets/graduation_cap.glb"></a-asset-item>
+    </a-assets>
+    
+    <!-- Sticker 1: Specialty Logo - Always available, starts the quest -->
+    <a-nft
+      type="nft"
+      url="/images/specialty"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance=".01"
+      smoothThreshold="5"
+    >
+      <!-- 3D Model -->
+      <a-entity gltf-model="#laptop-model" 
+                position="0 0 0" 
+                scale="5 5 5">
+      </a-entity>
+      
+      <!-- Hint panel floating above -->
+      <a-plane position="0 15 0" 
+               rotation="-90 0 0"
+               width="30" 
+               height="15"
+               color="#000000"
+               opacity="0.8">
+        <a-text value="A good program starts with\na declaration. Find the place\npowered by caffeine."
+                align="center"
+                width="28"
+                color="#00FF00"
+                position="0 0 0.1">
+        </a-text>
+      </a-plane>
+    </a-nft>
+    
+    <!-- Sticker 2: Coffee Cup - Unlocked after Specialty -->
     <a-nft
       type="nft"
       url="/images/cofy"
@@ -216,14 +305,64 @@
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-      <!-- Show a default cube when cofy rubik is detected -->      
-      <a-box position="0 0 0" 
-               scale="10 10 10"
-               material="src: #grid; color: yellow; transparent: true; opacity: 0.50;">
-        </a-box>
+      <!-- 3D Coffee Model - initially hidden -->
+      <a-entity id="cofy-box"
+                gltf-model="#coffee-model"
+                position="0 0 0" 
+                scale="5 5 5"
+                visible="false">
+      </a-entity>
+      
+      <!-- Hint panel -->
+      <a-plane position="0 15 0" 
+               rotation="-90 0 0"
+               width="30" 
+               height="15"
+               color="#000000"
+               opacity="0.8">
+        <a-text value="Even code needs energy to run.\nBut humor keeps developers sane.\nFind the sticker that makes you laugh."
+                align="center"
+                width="28"
+                color="#FFFF00"
+                position="0 0 0.1">
+        </a-text>
+      </a-plane>
     </a-nft>
     
-    <!-- Sigmoid NFT marker - shows sphere only if cofy was scanned first -->
+    <!-- Sticker 3: Coding Joke - Unlocked after Coffee -->
+    <a-nft
+      type="nft"
+      url="/images/joke"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance=".01"
+      smoothThreshold="5"
+    >
+      <!-- 3D Joke Model - initially hidden -->
+      <a-entity id="joke-box"
+                gltf-model="#joke-model"
+                position="0 0 0" 
+                scale="5 5 5"
+                visible="false">
+      </a-entity>
+      
+      <!-- Hint panel -->
+      <a-plane position="0 15 0" 
+               rotation="-90 0 0"
+               width="30" 
+               height="15"
+               color="#000000"
+               opacity="0.8">
+        <a-text value="A smile fixes many bugs.\nFor your final clue, follow the curve\nthat turns noise into signal smoothly."
+                align="center"
+                width="28"
+                color="#FF00FF"
+                position="0 0 0.1">
+        </a-text>
+      </a-plane>
+    </a-nft>
+    
+    <!-- Sticker 4: Sigmoid Curve - Final stage, unlocked after Joke -->
     <a-nft
       type="nft"
       url="/images/sigmoid"
@@ -232,13 +371,28 @@
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-      <!-- Sphere with radius 10, initially hidden -->
-       <a-box id="sigmoid-box"
-              position="0 0 0" 
-              scale="10 10 10"
-              material="src: #grid; color: red; transparent: true; opacity: 0.50;"
-              visible="false">
-        </a-box>
+      <!-- 3D Sigmoid Model - initially hidden -->
+      <a-entity id="sigmoid-box"
+                gltf-model="#graduation-model"
+                position="0 0 0" 
+                scale="5 5 5"
+                visible="false">
+      </a-entity>
+      
+      <!-- Final message panel -->
+      <a-plane position="0 15 0" 
+               rotation="-90 0 0"
+               width="30" 
+               height="15"
+               color="#000000"
+               opacity="0.8">
+        <a-text value="From initialization to activation,\nyou have followed the coder's path.\nCongratulations, Architect!"
+                align="center"
+                width="28"
+                color="#FF0000"
+                position="0 0 0.1">
+        </a-text>
+      </a-plane>
     </a-nft>
     
     <!-- static camera that moves according to the device movemenents -->
