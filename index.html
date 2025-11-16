@@ -137,6 +137,7 @@
   window.addEventListener('load', function() {
     updateStatus('A-Frame', '✓ Loaded');
     updateStatus('AR.js', '✓ Loaded');
+    updateStatus('A-Frame Xtras', '✓ Loaded');
     addDebugMessage('Quest started! Scan SPECIALTY logo first!', 'warning');
     
     // Check if models are loaded
@@ -316,9 +317,9 @@
       smoothThreshold="5"
     >
       <!-- 3D Model -->
-      <a-entity gltf-model-next= ”src: url(/assets/laptop.glb);”
-                position="0 0 0" 
-                scale="0.2 0.2 0.2">
+      <a-entity gltf-model="assets/laptop.glb"
+                position="0 -5 0" 
+                scale="1 1 1">
       </a-entity>
       
       <!-- Fallback visible box to test positioning -->
