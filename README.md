@@ -43,8 +43,7 @@ This experience is **progressive**, requiring players to follow the storyline st
 
 **Displayed Content**
 
-* A floating holographic 3D emblem of the faculty
-* A translucent floating hint panel
+* A laptop for enetring in the journey called university 
 
 **Hint Panel Text**
 
@@ -63,7 +62,6 @@ This experience is **progressive**, requiring players to follow the storyline st
 **Displayed Content**
 
 * A steaming 3D coffee cup hovering above the marker
-* A floating hint panel
 
 **Hint Panel Text**
 
@@ -81,9 +79,7 @@ This experience is **progressive**, requiring players to follow the storyline st
 
 **Displayed Content**
 
-* A floating text panel with a coding joke
-* An ASCII-style floating emoji
-* A subtle animation for engagement
+* A floating 3D Emoji
 
 **Hint Panel Text**
 
@@ -101,17 +97,13 @@ This experience is **progressive**, requiring players to follow the storyline st
 
 **Displayed Content**
 
-* A glowing animated sigmoid curve
-* A hint panel suspended above it
-* Smooth animated transition from low → high value
+* A graduation Cap for finishing university
 
 **Final Message**
 
 > *"From initialization to activation,
 > you have followed the coder's path.
 > Congratulations, you completed the Architect's quest."*
-
-🎁 After the hint fades, a **3D Developer's Key** briefly appears as the final reward.
 
 ---
 
@@ -176,13 +168,10 @@ campus-quest-ar/
 │   ├── joke.*                     # Marker 3
 │   └── sigmoid.*                  # Marker 4
 ├── assets/
-│   ├── specialty_logo.glb         # 3D emblem model
+│   ├── laptop.glb                 # Laptop model
 │   ├── coffee_cup.glb             # 3D cup model
-│   ├── joke_panel.png             # Joke texture
-│   ├── sigmoid_curve.glb          # Animated sigmoid
-│   └── developers_key.glb         # Final reward
-├── style.css                      # UI styling
-├── logic.js                       # State management logic
+│   ├── joke_emoji.png             # Joke texture
+│   └── graduation_cap.glb         # Graduation cap Model
 └── textures/                      # Additional textures
 ```
 
