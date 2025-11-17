@@ -297,7 +297,7 @@
   >
     <!-- Asset Management System -->
     <a-assets>
-      <a-asset-item id="laptop-model" src="assets/laptop.glb"></a-asset-item>
+      <a-asset-item id="laptop-model" src="assets/macbook_laptop.glb"></a-asset-item>
       <a-asset-item id="coffee-model" src="assets/coffe_cup.glb"></a-asset-item>
       <a-asset-item id="joke-model" src="assets/emoji_laugh.glb"></a-asset-item>
       <a-asset-item id="graduation-model" src="assets/graduation_cap.glb"></a-asset-item>
@@ -317,9 +317,9 @@
       smoothThreshold="5"
     >
       <!-- 3D Model -->
-      <a-entity gltf-model="assets/coffee_cup.glb"
+      <a-entity gltf-model="#laptop-model"
                 position="-125 -200 -100" 
-                scale="50 50 50">
+                scale="75 75 75">
       </a-entity>
       
       <!-- Fallback visible box to test positioning -->
