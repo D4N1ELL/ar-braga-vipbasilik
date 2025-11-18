@@ -24,10 +24,52 @@
     font-size: 1.25em;
     color: white;
   }
+  
+  #debug-info {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    z-index: 10000;
+    max-width: 250px;
+  }
+  
+  #debug-info div {
+    margin: 4px 0;
+  }
+  
+  .debug-success {
+    color: #4CAF50;
+    font-weight: bold;
+  }
+  
+  .debug-error {
+    color: #FF5722;
+    font-weight: bold;
+  }
+  
+  .debug-warning {
+    color: #FFC107;
+  }
+  
+  .debug-info {
+    color: #FFFFFF;
+  }
 </style>
 <body style="margin: 0px; overflow: hidden;">
   <div class="arjs-loader">
     <div>Loading, please wait...</div>
+  </div>
+  
+  <!-- Debug info display in upper right corner -->
+  <div id="debug-info">
+    <strong>DEBUG LOG:</strong>
+    <div id="debug-messages"></div>
   </div>
   
   <a-scene
@@ -52,7 +94,7 @@
         gltf-model="assets/laptop.glb"
         rotation="-90 0 0"
       ></a-entity>
-      <a-text value="#1 - Scan SPECIALTY logo" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
+      <a-text value="#Find Student Fuel" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
     </a-nft>
     
     <!-- Sticker 2: Coffee Cup - Unlocked after Specialty -->
@@ -73,7 +115,7 @@
         rotation="-90 75 0"
         visible="false"
       ></a-entity>
-      <a-text value="#2 - Find COFFEE cup" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
+      <a-text value="#Find Humour" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
     </a-nft>
     
     <!-- Sticker 3: Coding Joke - Unlocked after Coffee -->
@@ -89,12 +131,12 @@
       <a-entity
         id="jokeModel"
         position="100 -250 -250"
-        scale="10 10 10"
+        scale="0 0 0"
         gltf-model="assets/emoji_laugh.glb"
         rotation="-90 0 0"
         visible="false"
       ></a-entity>
-      <a-text value="#3 - Find CODING JOKE" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
+      <a-text value="#Find Function" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
     </a-nft>
     
     <!-- Sticker 4: Sigmoid - Final stage, unlocked after Joke -->
@@ -115,7 +157,7 @@
         rotation="-90 0 0"
         visible="false"
       ></a-entity>
-      <a-text value="#4 - Final SIGMOID" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
+      <a-text value="#Congrats! You Survived University" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
     </a-nft>
     
     <a-entity camera></a-entity>
@@ -126,7 +168,26 @@
     let cofyScanned = false;
     let jokeScanned = false;
 
+    // Add debug message to screen
+    function addDebugMessage(message, type = 'info') {
+      const debugDiv = document.getElementById('debug-messages');
+      if (debugDiv) {
+        const msg = document.createElement('div');
+        msg.textContent = message;
+        msg.className = 'debug-' + type;
+        debugDiv.appendChild(msg);
+        
+        // Keep only last 8 messages
+        while (debugDiv.children.length > 8) {
+          debugDiv.removeChild(debugDiv.firstChild);
+        }
+      }
+    }
+
     document.querySelector('a-scene').addEventListener('loaded', function() {
+      addDebugMessage('Scene loaded! Quest ready.', 'success');
+      addDebugMessage('Scan SPECIALTY marker first!', 'warning');
+      
       const specialtyMarker = document.querySelector('#specialtyMarker');
       const cofyMarker = document.querySelector('#cofyMarker');
       const jokeMarker = document.querySelector('#jokeMarker');
@@ -139,54 +200,75 @@
       // When specialty marker found
       specialtyMarker.addEventListener('markerFound', function() {
         console.log('Specialty marker found!');
+        addDebugMessage('✓ SPECIALTY found!', 'success');
         specialtyScanned = true;
+        addDebugMessage('Next: Scan COFFEE marker', 'warning');
+      });
+
+      specialtyMarker.addEventListener('markerLost', function() {
+        addDebugMessage('Specialty marker lost', 'info');
       });
 
       // When cofy marker found
       cofyMarker.addEventListener('markerFound', function() {
         console.log('Coffee marker found!');
+        addDebugMessage('Coffee marker detected', 'info');
         if (specialtyScanned) {
           cofyModel.setAttribute('visible', 'true');
           cofyScanned = true;
+          addDebugMessage('✓ COFFEE unlocked!', 'success');
+          addDebugMessage('Next: Scan JOKE marker', 'warning');
           console.log('Coffee model is now visible!');
         } else {
+          addDebugMessage('✗ BLOCKED! Scan SPECIALTY first', 'error');
           console.log('Specialty marker must be scanned first!');
         }
       });
 
       cofyMarker.addEventListener('markerLost', function() {
         cofyModel.setAttribute('visible', 'false');
+        addDebugMessage('Coffee marker lost', 'info');
       });
 
       // When joke marker found
       jokeMarker.addEventListener('markerFound', function() {
         console.log('Joke marker found!');
+        addDebugMessage('Joke marker detected', 'info');
         if (cofyScanned) {
           jokeModel.setAttribute('visible', 'true');
           jokeScanned = true;
+          addDebugMessage('✓ JOKE unlocked!', 'success');
+          addDebugMessage('Final: Scan SIGMOID marker', 'warning');
           console.log('Joke model is now visible!');
         } else {
+          addDebugMessage('✗ BLOCKED! Scan COFFEE first', 'error');
           console.log('Coffee marker must be scanned first!');
         }
       });
 
       jokeMarker.addEventListener('markerLost', function() {
         jokeModel.setAttribute('visible', 'false');
+        addDebugMessage('Joke marker lost', 'info');
       });
 
       // When sigmoid marker found
       sigmoidMarker.addEventListener('markerFound', function() {
         console.log('Sigmoid marker found!');
+        addDebugMessage('Sigmoid marker detected', 'info');
         if (jokeScanned) {
           sigmoidModel.setAttribute('visible', 'true');
+          addDebugMessage('✓ SIGMOID unlocked!', 'success');
+          addDebugMessage('🎉 Quest complete!', 'success');
           console.log('Sigmoid model is now visible! Quest complete!');
         } else {
+          addDebugMessage('✗ BLOCKED! Scan JOKE first', 'error');
           console.log('Joke marker must be scanned first!');
         }
       });
 
       sigmoidMarker.addEventListener('markerLost', function() {
         sigmoidModel.setAttribute('visible', 'false');
+        addDebugMessage('Sigmoid marker lost', 'info');
       });
     });
   </script>
