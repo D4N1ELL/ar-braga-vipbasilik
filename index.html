@@ -3,24 +3,8 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-<script>
-  console.log('A-Frame library loaded');
-  if (typeof updateStatus === 'function') updateStatus('A-Frame', '✓ Loaded');
-</script>
-
 <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-<script>
-  console.log('AR.js library loaded');
-  if (typeof updateStatus === 'function') updateStatus('AR.js', '✓ Loaded');
-</script>
 
-<script src="https://rawgit.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
-<script>
-  console.log('AFrame Extras library loaded');
-  if (typeof updateStatus === 'function') updateStatus('AFrame Extras', '✓ Loaded');
-</script>
-
-<!-- style for the loader -->
 <style>
   .arjs-loader {
     height: 100%;
@@ -40,404 +24,171 @@
     font-size: 1.25em;
     color: white;
   }
-  
-  #library-status {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    font-family: monospace;
-    font-size: 12px;
-    z-index: 10000;
-  }
-  
-  .status-item {
-    margin: 5px 0;
-  }
-  
-  .loaded {
-    color: #4CAF50;
-  }
-  
-  .loading {
-    color: #FFC107;
-  }
-  
-  #debug-info {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    z-index: 10000;
-    max-width: 250px;
-  }
-  
-  #debug-info div {
-    margin: 4px 0;
-  }
-  
-  .debug-success {
-    color: #4CAF50;
-    font-weight: bold;
-  }
-  
-  .debug-error {
-    color: #FF5722;
-    font-weight: bold;
-  }
-  
-  .debug-warning {
-    color: #FFC107;
-  }
 </style>
-
-<script>
-  // Update status display
-  function updateStatus(library, status) {
-    const statusDiv = document.getElementById(library + '-status');
-    if (statusDiv) {
-      statusDiv.textContent = library + ': ' + status;
-      statusDiv.className = 'status-item ' + (status === '✓ Loaded' ? 'loaded' : 'loading');
-    }
-  }
-  
-  // Add debug message to screen
-  function addDebugMessage(message, type = 'info') {
-    const debugDiv = document.getElementById('debug-messages');
-    if (debugDiv) {
-      const msg = document.createElement('div');
-      msg.textContent = message;
-      msg.className = 'debug-' + type;
-      debugDiv.appendChild(msg);
-      
-      // Keep only last 5 messages
-      while (debugDiv.children.length > 5) {
-        debugDiv.removeChild(debugDiv.firstChild);
-      }
-    }
-  }
-  
-  // Track progression through all 4 stickers
-  let specialtyScanned = false;
-  let cofyUnlocked = false;
-  let cofyScanned = false;
-  let jokeUnlocked = false;
-  let jokeScanned = false;
-  let sigmoidUnlocked = false;
-  
-  // Debug console logging for NFT detection
-  window.addEventListener('load', function() {
-    updateStatus('A-Frame', '✓ Loaded');
-    updateStatus('AR.js', '✓ Loaded');
-    updateStatus('A-Frame Xtras', '✓ Loaded');
-    addDebugMessage('Quest started! Scan SPECIALTY logo first!', 'warning');
-    
-    // Check if models are loaded
-    const laptopModel = document.querySelector('#laptop-model');
-    const coffeeModel = document.querySelector('#coffee-model');
-    const jokeModel = document.querySelector('#joke-model');
-    const graduationModel = document.querySelector('#graduation-model');
-    
-    if (laptopModel) addDebugMessage('Laptop model loaded', 'success');
-    else addDebugMessage('ERROR: Laptop model not loaded!', 'error');
-    
-    if (coffeeModel) addDebugMessage('Coffee model loaded', 'success');
-    else addDebugMessage('ERROR: Coffee model not loaded!', 'error');
-    
-    if (jokeModel) addDebugMessage('Joke model loaded', 'success');
-    else addDebugMessage('ERROR: Joke model not loaded!', 'error');
-    
-    if (graduationModel) addDebugMessage('Graduation model loaded', 'success');
-    else addDebugMessage('ERROR: Graduation model not loaded!', 'error');
-    
-    const specialtyMarker = document.querySelector('a-nft[url="/images/specialty"]');
-    const cofyMarker = document.querySelector('a-nft[url="/images/cofy"]');
-    const jokeMarker = document.querySelector('a-nft[url="/images/joke"]');
-    const sigmoidMarker = document.querySelector('a-nft[url="/images/sigmoid"]');
-    
-    const cofyBox = document.querySelector('#cofy-box');
-    const jokeBox = document.querySelector('#joke-box');
-    const sigmoidBox = document.querySelector('#sigmoid-box');
-    
-    const cofyFallback = document.querySelector('#cofy-fallback');
-    const jokeFallback = document.querySelector('#joke-fallback');
-    const sigmoidFallback = document.querySelector('#sigmoid-fallback');
-    
-    // Verify all markers exist
-    if (!specialtyMarker) addDebugMessage('ERROR: Specialty marker not found!', 'error');
-    if (!cofyMarker) addDebugMessage('ERROR: Cofy marker not found!', 'error');
-    if (!jokeMarker) addDebugMessage('ERROR: Joke marker not found!', 'error');
-    if (!sigmoidMarker) addDebugMessage('ERROR: Sigmoid marker not found!', 'error');
-    
-    // Sticker 1: Specialty Logo - Always available
-    if (specialtyMarker) {
-      specialtyMarker.addEventListener('markerFound', function() {
-        console.log('Specialty marker detected!');
-        specialtyScanned = true;
-        cofyUnlocked = true;
-        addDebugMessage('✓ SPECIALTY detected! Quest begins!', 'success');
-        addDebugMessage('Next: Find the COFFEE cup!', 'warning');
-      });
-      
-      specialtyMarker.addEventListener('markerLost', function() {
-        console.log('Specialty marker lost');
-        addDebugMessage('Specialty marker lost', 'info');
-      });
-    }
-    
-    // Sticker 2: Cofy (Coffee Cup) - Unlocked after Specialty
-    if (cofyMarker && cofyBox) {
-      cofyMarker.addEventListener('markerFound', function() {
-        console.log('Cofy marker detected!');
-        addDebugMessage('Coffee cup detected!', 'warning');
-        
-        if (cofyUnlocked) {
-          cofyScanned = true;
-          jokeUnlocked = true;
-          cofyBox.setAttribute('visible', 'true');
-          if (cofyFallback) cofyFallback.setAttribute('visible', 'true');
-          addDebugMessage('✓ COFFEE unlocked! Energy gained!', 'success');
-          addDebugMessage('Next: Find the CODING JOKE!', 'warning');
-        } else {
-          cofyBox.setAttribute('visible', 'false');
-          if (cofyFallback) cofyFallback.setAttribute('visible', 'false');
-          addDebugMessage('✗ BLOCKED! Scan SPECIALTY first!', 'error');
-        }
-      });
-      
-      cofyMarker.addEventListener('markerLost', function() {
-        console.log('Cofy marker lost');
-        addDebugMessage('Coffee marker lost', 'info');
-      });
-    }
-    
-    // Sticker 3: Joke - Unlocked after Cofy
-    if (jokeMarker && jokeBox) {
-      jokeMarker.addEventListener('markerFound', function() {
-        console.log('Joke marker detected!');
-        addDebugMessage('Joke detected!', 'warning');
-        
-        if (jokeUnlocked) {
-          jokeScanned = true;
-          sigmoidUnlocked = true;
-          jokeBox.setAttribute('visible', 'true');
-          if (jokeFallback) jokeFallback.setAttribute('visible', 'true');
-          addDebugMessage('✓ JOKE unlocked! Humor restored!', 'success');
-          addDebugMessage('Final step: Find the SIGMOID!', 'warning');
-        } else {
-          jokeBox.setAttribute('visible', 'false');
-          if (jokeFallback) jokeFallback.setAttribute('visible', 'false');
-          addDebugMessage('✗ BLOCKED! Scan COFFEE first!', 'error');
-        }
-      });
-      
-      jokeMarker.addEventListener('markerLost', function() {
-        console.log('Joke marker lost');
-        jokeBox.setAttribute('visible', 'false');
-        if (jokeFallback) jokeFallback.setAttribute('visible', 'false');
-        addDebugMessage('Joke marker lost', 'info');
-      });
-    }
-    
-    // Sticker 4: Sigmoid - Final stage, unlocked after Joke
-    if (sigmoidMarker && sigmoidBox) {
-      sigmoidMarker.addEventListener('markerFound', function() {
-        console.log('Sigmoid marker detected!');
-        addDebugMessage('Sigmoid detected!', 'warning');
-        
-        if (sigmoidUnlocked) {
-          sigmoidBox.setAttribute('visible', 'true');
-          if (sigmoidFallback) sigmoidFallback.setAttribute('visible', 'true');
-          addDebugMessage('✓ SIGMOID COMPLETE!', 'success');
-          addDebugMessage('🎉 Quest completed! You are the Architect!', 'success');
-        } else {
-          sigmoidBox.setAttribute('visible', 'false');
-          if (sigmoidFallback) sigmoidFallback.setAttribute('visible', 'false');
-          addDebugMessage('✗ BLOCKED! Scan JOKE first!', 'error');
-        }
-      });
-      
-      sigmoidMarker.addEventListener('markerLost', function() {
-        console.log('Sigmoid marker lost');
-        sigmoidBox.setAttribute('visible', 'false');
-        if (sigmoidFallback) sigmoidFallback.setAttribute('visible', 'false');
-        addDebugMessage('Sigmoid marker lost', 'info');
-      });
-    }
-  });
-</script>
 <body style="margin: 0px; overflow: hidden;">
-
-  <!-- Library loading status display -->
-  <div id="library-status">
-    <div id="A-Frame-status" class="status-item loading">A-Frame: Loading...</div>
-    <div id="AR.js-status" class="status-item loading">AR.js: Loading...</div>
+  <div class="arjs-loader">
+    <div>Loading, please wait...</div>
   </div>
   
-  <!-- Debug info display at bottom of screen -->
-  <div id="debug-info">
-    <strong>DEBUG INFO:</strong>
-    <div id="debug-messages"></div>
-  </div>
-
-  <!-- a-frame scene -->
   <a-scene
     vr-mode-ui="enabled: false;"
-    renderer="logarithmicDepthBuffer: true; antialias: true;"
+    renderer="logarithmicDepthBuffer: true;"
     embedded
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
   >
-    <!-- Asset Management System -->
-    <a-assets>
-      <a-asset-item id="laptop-model" src="fire.glb"></a-asset-item>
-      <a-asset-item id="coffee-model" src="assets/coffe_cup.glb"></a-asset-item>
-      <a-asset-item id="joke-model" src="assets/emoji_laugh.glb"></a-asset-item>
-      <a-asset-item id="graduation-model" src="assets/graduation_cap.glb"></a-asset-item>
-    </a-assets>
-    
-    <!-- Add lights for better visibility -->
-    <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
-    <a-light type="directional" position="0 1 0" intensity="1"></a-light>
-    
     <!-- Sticker 1: Specialty Logo - Always available, starts the quest -->
     <a-nft
+      id="specialtyMarker"
       type="nft"
-      url="/images/specialty"
+      url="./images/specialty"
       smooth="true"
       smoothCount="10"
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-      <!-- 3D Model -->
-      <a-entity gltf-model="fire.glb"
-                position="-175 -175 -100" 
-                scale="75 75 75">
-      </a-entity>
-      
-      <!-- Fallback visible box to test positioning -->
-      <!-- <a-box position="0 10 0" 
-             scale="10 10 10"
-             color="#00FF00"
-             material="opacity: 0.5; transparent: true;">
-      </a-box> -->
-      
+      <a-entity
+        position="-125 -200 -100"
+        scale="75 75 75"
+        gltf-model="assets/laptop.glb"
+        rotation="-90 0 0"
+      ></a-entity>
+      <a-text value="#1 - Scan SPECIALTY logo" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
     </a-nft>
     
     <!-- Sticker 2: Coffee Cup - Unlocked after Specialty -->
     <a-nft
+      id="cofyMarker"
       type="nft"
-      url="/images/cofy"
+      url="./images/cofy"
       smooth="true"
       smoothCount="10"
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-      <!-- 3D Coffee Model - initially hidden -->
-      <a-entity id="cofy-box"
-                gltf-model="#coffee-model"
-                position="0 0 0" 
-                scale="0.147 0.094 0.147"
-                rotation="0 0 0"
-                visible="false">
-      </a-entity>
-      
-      <!-- Fallback visible box to test positioning -->
-      <a-box id="cofy-fallback"
-             position="0 10 0" 
-             scale="10 10 10"
-             color="#FFFF00"
-             material="opacity: 0.5; transparent: true;"
-             visible="false">
-      </a-box>
-      
-      
+      <a-entity
+        id="cofyModel"
+        position="125 0 -300"
+        scale="50 50 50"
+        gltf-model="assets/coffe_cup.glb"
+        rotation="-90 75 0"
+        visible="false"
+      ></a-entity>
+      <a-text value="#2 - Find COFFEE cup" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
     </a-nft>
     
     <!-- Sticker 3: Coding Joke - Unlocked after Coffee -->
     <a-nft
+      id="jokeMarker"
       type="nft"
-      url="/images/joke"
+      url="./images/joke"
       smooth="true"
       smoothCount="10"
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-      <!-- 3D Joke Model - initially hidden -->
-      <a-entity id="joke-box"
-                gltf-model="#joke-model"
-                position="0 0 0" 
-                scale="0.0025 0.0025 0.0025"
-                rotation="0 0 0"
-                visible="false">
-      </a-entity>
-      
-      <!-- Fallback visible box to test positioning -->
-      <a-box id="joke-fallback"
-             position="0 10 0" 
-             scale="10 10 10"
-             color="#FF00FF"
-             material="opacity: 0.5; transparent: true;"
-             visible="false">
-      </a-box>
-      
+      <a-entity
+        id="jokeModel"
+        position="100 -250 -250"
+        scale="10 10 10"
+        gltf-model="assets/emoji_laugh.glb"
+        rotation="-90 0 0"
+        visible="false"
+      ></a-entity>
+      <a-text value="#3 - Find CODING JOKE" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
     </a-nft>
     
-    <!-- Sticker 4: Sigmoid Curve - Final stage, unlocked after Joke -->
+    <!-- Sticker 4: Sigmoid - Final stage, unlocked after Joke -->
     <a-nft
+      id="sigmoidMarker"
       type="nft"
-      url="/images/sigmoid"
+      url="./images/sigmoid"
       smooth="true"
       smoothCount="10"
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-      <!-- 3D Sigmoid Model - initially hidden -->
-      <a-entity id="sigmoid-box"
-                gltf-model="#graduation-model"
-                position="0 0 0" 
-                scale="0.009 0.009 0.027"
-                rotation="0 0 0"
-                visible="false">
-      </a-entity>
-      
-      <!-- Fallback visible box to test positioning -->
-      <a-box id="sigmoid-fallback"
-             position="0 10 0" 
-             scale="10 10 10"
-             color="#FF0000"
-             material="opacity: 0.5; transparent: true;"
-             visible="false">
-      </a-box>
-      
-      <!-- Final message panel -->
-      <!-- <a-plane position="0 15 0" 
-               rotation="-90 0 0"
-               width="30" 
-               height="15"
-               color="#000000"
-               opacity="0.8">
-        <a-text value="From initialization to activation,\nyou have followed the coder's path.\nCongratulations, Architect!"
-                align="center"
-                width="28"
-                color="#FF0000"
-                position="0 0 0.1">
-        </a-text>
-      </a-plane> -->
+      <a-entity
+        id="sigmoidModel"
+        position="100 -250 -250"
+        scale="10 10 10"
+        gltf-model="assets/graduation_cap.glb"
+        rotation="-90 0 0"
+        visible="false"
+      ></a-entity>
+      <a-text value="#4 - Final SIGMOID" align="center" color="#FFFFFF" width="8" position="0 -20 -20" rotation="-90 0 0" scale="50 50 50"></a-text>
     </a-nft>
     
-    <!-- static camera that moves according to the device movemenents -->
     <a-entity camera></a-entity>
-  
   </a-scene>
 
+  <script>
+    let specialtyScanned = false;
+    let cofyScanned = false;
+    let jokeScanned = false;
 
+    document.querySelector('a-scene').addEventListener('loaded', function() {
+      const specialtyMarker = document.querySelector('#specialtyMarker');
+      const cofyMarker = document.querySelector('#cofyMarker');
+      const jokeMarker = document.querySelector('#jokeMarker');
+      const sigmoidMarker = document.querySelector('#sigmoidMarker');
+      
+      const cofyModel = document.querySelector('#cofyModel');
+      const jokeModel = document.querySelector('#jokeModel');
+      const sigmoidModel = document.querySelector('#sigmoidModel');
+
+      // When specialty marker found
+      specialtyMarker.addEventListener('markerFound', function() {
+        console.log('Specialty marker found!');
+        specialtyScanned = true;
+      });
+
+      // When cofy marker found
+      cofyMarker.addEventListener('markerFound', function() {
+        console.log('Coffee marker found!');
+        if (specialtyScanned) {
+          cofyModel.setAttribute('visible', 'true');
+          cofyScanned = true;
+          console.log('Coffee model is now visible!');
+        } else {
+          console.log('Specialty marker must be scanned first!');
+        }
+      });
+
+      cofyMarker.addEventListener('markerLost', function() {
+        cofyModel.setAttribute('visible', 'false');
+      });
+
+      // When joke marker found
+      jokeMarker.addEventListener('markerFound', function() {
+        console.log('Joke marker found!');
+        if (cofyScanned) {
+          jokeModel.setAttribute('visible', 'true');
+          jokeScanned = true;
+          console.log('Joke model is now visible!');
+        } else {
+          console.log('Coffee marker must be scanned first!');
+        }
+      });
+
+      jokeMarker.addEventListener('markerLost', function() {
+        jokeModel.setAttribute('visible', 'false');
+      });
+
+      // When sigmoid marker found
+      sigmoidMarker.addEventListener('markerFound', function() {
+        console.log('Sigmoid marker found!');
+        if (jokeScanned) {
+          sigmoidModel.setAttribute('visible', 'true');
+          console.log('Sigmoid model is now visible! Quest complete!');
+        } else {
+          console.log('Joke marker must be scanned first!');
+        }
+      });
+
+      sigmoidMarker.addEventListener('markerLost', function() {
+        sigmoidModel.setAttribute('visible', 'false');
+      });
+    });
+  </script>
 </body>
 </html>
